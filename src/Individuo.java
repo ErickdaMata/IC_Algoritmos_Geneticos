@@ -17,10 +17,7 @@ public class Individuo {
 	//Gera um individuo que herdou cromossomos
 	public Individuo(int[] heranca) {
 		aptidao = -1;
-		cromosso = new int[heranca.length];
-		for(int i =0;i<cromosso.length;i++) {
-			cromosso[i] = heranca[i];
-		}
+		setCromosso(heranca);
 	}
 	
 	public int getAptidao() {
@@ -64,6 +61,7 @@ public class Individuo {
 		for(int i =0; i < cromosso.length; i++) {
 			System.out.print(cromosso[i] + "|");
 		}
+		System.out.println("");
 	}
 	
 	static int geraRand(int maximo) {
@@ -75,8 +73,17 @@ public class Individuo {
 		return rand;
 	}
 
-	void LOG(String s) {
+	static void LOG(String s){
 		System.out.println(s);
 	}
+	
+	static void LOG(int[] v){
+		System.out.println(" ------- ");
+		for(int i=0; i < v.length; i++){
+			System.out.println(" >" +v[i] );
+		}
+	}
+	
+	
 	
 }

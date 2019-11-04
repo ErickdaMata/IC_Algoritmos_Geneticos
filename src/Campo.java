@@ -1,4 +1,5 @@
 import java.io.ObjectInputStream.GetField;
+import java.nio.channels.MulticastChannel;
 import java.util.Random;
 
 public class Campo {
@@ -11,13 +12,13 @@ public class Campo {
 	private final int OBSTACULOS;
 	private final int MULTA;
 	
-	private final int MAX = -10;
+	private final int MAX = -10*((10*10)+1);
 	
 	public Campo(int TAMANHO, int OBSTACULOS) {
 		// TODO Auto-generated constructor stub
 		this.TAMANHO = TAMANHO;
 		this.OBSTACULOS = OBSTACULOS;
-		this.MULTA = TAMANHO*TAMANHO;
+		this.MULTA = (TAMANHO*TAMANHO)+1;
 		
 		campo = novoCampo();
 		
@@ -37,12 +38,16 @@ public class Campo {
 		return OBSTACULOS;
 	}
 	
+	public int getCampo(int i, int j) {
+		return campo[i][j];
+	}
+	
 	private int[][] novoCampo() {
 		int[][] campo  = new int[TAMANHO][TAMANHO];
 		
 		for (int i = 0; i<TAMANHO; i++) {
 			for (int j = 0; j<TAMANHO; j++) {
-				campo[i][j] = 0;
+				campo[i][j] = 1;
 			}
 		}
 		
@@ -73,7 +78,7 @@ public class Campo {
 		saida[0] = 6;
 		saida[1] = 0;
 		
-		campo[saida[0]][saida[1]] = 0;
+		campo[saida[0]][saida[1]] = -(MULTA*OBSTACULOS);
 	}
 	
 	private void colocarObstaculos(int OBSTACULOS) {
@@ -88,6 +93,7 @@ public class Campo {
 		campo[7][4] = MULTA;
 		campo[9][1] = MULTA;
 		campo[9][8] = MULTA;
+		
 		
 		/**
 		int rndI, rndJ;
@@ -134,10 +140,10 @@ public class Campo {
 						
 						System.out.print("S");
 						break;
-					case 0:
+					case 1:
 						System.out.print("_");
 						break;
-					case 100:
+					case 101:
 						System.out.print("O");
 						break;
 					default:
