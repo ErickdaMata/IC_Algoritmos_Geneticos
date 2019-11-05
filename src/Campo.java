@@ -58,31 +58,32 @@ public class Campo {
 		
 		entrada = new int[2];
 		
-		//entrada[0] = geraRand(TAMANHO);
-		//entrada[1] = geraRand(TAMANHO);
+		entrada[0] = geraRand(TAMANHO);
+		entrada[1] = geraRand(TAMANHO);
 		
-		entrada[0] = 0;
-		entrada[1] = 7;
+		//entrada[0] = 0;
+		//entrada[1] = 7;
 		
-		campo[entrada[0]][entrada[1]] = 0;
+		campo[entrada[0]][entrada[1]] = 1;
 	}
 	
 	private void definirSaida() {
 		
 		saida = new int[2];
 		
-		//saida[0] = geraRand(TAMANHO);
-		//saida[1] = geraRand(TAMANHO);
+		saida[0] = geraRand(TAMANHO);
+		saida[1] = geraRand(TAMANHO);
 		//int[] saida   = {6,0};
 		
-		saida[0] = 6;
-		saida[1] = 0;
+		//saida[0] = 6;
+		//saida[1] = 0;
 		
-		campo[saida[0]][saida[1]] = -(MULTA*OBSTACULOS);
+		campo[saida[0]][saida[1]] = 0;
 	}
 	
 	private void colocarObstaculos(int OBSTACULOS) {
 		
+		/**
 		campo[0][2] = MULTA;
 		campo[0][6] = MULTA;
 		campo[3][1] = MULTA;
@@ -93,9 +94,9 @@ public class Campo {
 		campo[7][4] = MULTA;
 		campo[9][1] = MULTA;
 		campo[9][8] = MULTA;
+		*/
 		
 		
-		/**
 		int rndI, rndJ;
 		
 		//Coloca os obstáculos
@@ -104,19 +105,12 @@ public class Campo {
 			rndI = geraRand(TAMANHO);
 			rndJ = geraRand(TAMANHO);
 			
-			if(campo[rndI][rndJ] != 1) {
-				campo[rndI][rndJ] = 1;
+			if(campo[rndI][rndJ] != MULTA) {
+				campo[rndI][rndJ] = MULTA;
 				i++;
-			}
-			
+			}	
 		}
 		
-		//Coloca a entrada
-		campo[entrada[0]][entrada[1]] = 0;
-		
-		//Coloca a saída
-		campo[saida[0]][saida[1]] = -TAMANHO;
-		*/
 	}
 	
 	public void desenharCampo() {
@@ -136,8 +130,7 @@ public class Campo {
 				else {
 					switch (campo[i][j]) {
 					
-					case (MAX):
-						
+					case 0:
 						System.out.print("S");
 						break;
 					case 1:
