@@ -1,5 +1,3 @@
-import java.io.ObjectInputStream.GetField;
-import java.nio.channels.MulticastChannel;
 import java.util.Random;
 
 public class Campo {
@@ -11,8 +9,6 @@ public class Campo {
 	private final int TAMANHO;
 	private final int OBSTACULOS;
 	private final int MULTA;
-	
-	private final int MAX = -10*((10*10)+1);
 	
 	public Campo(int TAMANHO, int OBSTACULOS) {
 		// TODO Auto-generated constructor stub

@@ -2,14 +2,19 @@ import java.util.Random;
 
 public class Individuo {
 
+	private int aptidao = 0;
 	private int cromosso[];
-	private int aptidao;
 	private int PONTOS;
 	
 	//Gera um individuo aleatorio
-	public Individuo(int tamanhoCromossomo ,int TAMANHO, int PONTOS) {
-		aptidao = -1;
+	public Individuo(int TAMANHO, int PONTOS) {
+		
+		//Cada individo terá um caminho em seu cromossomo:
+		//C = |P1i|P1j|P2i|P2j|P3i|P3j|d0|d1|d2|d3|
+		int tamanhoCromossomo = (PONTOS*2)+(PONTOS)+1;
+		
 		this.PONTOS = PONTOS;
+		
 		cromosso = new int[tamanhoCromossomo];
 		
 		gerarCromossomo(TAMANHO, PONTOS);
@@ -18,7 +23,6 @@ public class Individuo {
 	
 	//Gera um individuo que herdou cromossomos
 	public Individuo(int[] heranca, int PONTOS) {
-		aptidao = -1;
 		this.PONTOS = PONTOS;
 		setCromosso(heranca);
 	}
@@ -31,8 +35,8 @@ public class Individuo {
 		return cromosso;
 	}
 	
-	public void setAptidao(int aptidao) {
-		this.aptidao = aptidao;
+	public void esqueceAptidao() {
+		this.aptidao = 0;
 	}
 	
 	public void somaAptidao(int valor) {
@@ -56,7 +60,6 @@ public class Individuo {
 			cromosso[i] = geraRand(2);
 		}
 		
-		exibirCromossomos();
 	}
 	
 	public void exibirCromossomos() {
@@ -67,27 +70,11 @@ public class Individuo {
 		System.out.println("");
 	}
 	
-	static int geraRand(int maximo) {
-
-		Random randomico = new Random();
-		
-		int rand = randomico.nextInt(maximo);
-		
-		return rand;
-	}
-
-	static void LOG(String s){
-		System.out.println(s);
-	}
-	
-	static void LOG(int[] v){
-		System.out.println(" ------- ");
-		for(int i=0; i < v.length; i++){
-			System.out.println(" >" +v[i] );
-		}
-	}
-
 	public void calcularAptidao(Campo campo) {
+
+		//Caso a aptidão já tenha sido calculada
+		if(aptidao > 0)
+			return;
 		
 		int p, d = 0, direcao;
 		int pesoCaminho = 1;
@@ -98,9 +85,6 @@ public class Individuo {
 		int [] destino = new int[2];
 		
 		d = (PONTOS*2);
-		
-		//Inicializa a apitidão do individuo
-		setAptidao(0);
 		
 		//Para quantos pontos de caminho houverem:
 		for(p = 0; p < (PONTOS*2); p++) {
@@ -133,6 +117,7 @@ public class Individuo {
 		//soma a apitidão do individuo
 		somaAptidao(pesoCaminho);
 		
+		exibirCromossomos();
 		LOG("Apitidão: " +getAptidao());
 	}
 	
@@ -153,13 +138,10 @@ public class Individuo {
 		int deslocJ = destino[1]-origem[1];
 		int parada;
 		
-		LOG("Deslocamento I: " + deslocI);
-		LOG("Deslocamento J: " + deslocJ);
-		LOG("Direção: " + direcao);
-		
 		//Verifica de a diretação é tomada em I ou J
 		if(direcao == 1){
 			
+			//Soma as casas em I , depois em J
 			if(deslocI > 0){
 				for(passo = (origem[0]+1); passo <= destino[0]; passo++)
 					pontos += campo.getCampo(passo, origem[1]);
@@ -178,6 +160,7 @@ public class Individuo {
 			
 		} else {
 
+			//Soma as casas em J , depois em I
 			if(deslocJ > 0){
 				for(passo = (origem[1]+1); passo <= destino[1]; passo++)
 					pontos += campo.getCampo(origem[0], passo);
@@ -198,13 +181,28 @@ public class Individuo {
 			}
 			
 		}
-		//Soma as casas em J por onde o caminho passa
-		
-		
-		
 		return pontos;
 	}
 	
+
+	static int geraRand(int maximo) {
+
+		Random randomico = new Random();
+		
+		int rand = randomico.nextInt(maximo);
+		
+		return rand;
+	}
+
+	static void LOG(String s){
+		System.out.println(s);
+	}
 	
+	static void LOG(int[] v){
+		System.out.println(" ------- ");
+		for(int i=0; i < v.length; i++){
+			System.out.println(" >" +v[i] );
+		}
+	}	
 	
 }

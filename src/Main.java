@@ -2,45 +2,34 @@ import java.util.Random;
 
 public class Main {
 	
-	final static int TAMANHO = 10;
+	final static int TAMANHO_CAMPO = 10;
 	final static int OBSTACULOS = 10;
 	
+	final static int TAMANHO_POPULACAO = 10;
 	final static int PONTOS = 3;
-	final static int MULTA = TAMANHO * TAMANHO;
-	
+	final static int MULTA = TAMANHO_CAMPO * TAMANHO_CAMPO;
 	
 	public static void main(String[] args) 
 	{
 		
-		Campo campo = new Campo(TAMANHO, OBSTACULOS);
+		Campo campo = new Campo(TAMANHO_CAMPO, OBSTACULOS);
 		
 		campo.desenharCampo();
 		
-		//Cada individo terá um caminho em seu cromossomo:
-		//C = |P1i|P1j|P2i|P2j|P3i|P3j|d0|d1|d2|d3|
-		Individuo individuo = new Individuo((PONTOS*2)+(PONTOS)+1, TAMANHO, PONTOS);
+		Populacao populacao = new Populacao(TAMANHO_POPULACAO, TAMANHO_CAMPO, PONTOS, campo);
+		
+		populacao.avaliarAptidoes();
+		
+		populacao.reproducao();
+		
+		//Individuo individuo = new Individuo(TAMANHO, PONTOS);
 		
 		//individuo.gerarCromossomo(TAMANHO, PONTOS);
 		//int heranca[] = {3,7,6,0,6,0,0,1,1,0};
-		//Individuo individuo = new Individuo(heranca); 
+		//Individuo individuo = new Individuo(heranca);
 		
-		//individuo.exibirCromossomos();
+		//individuo.calcularAptidao(campo);
 		
-		individuo.calcularAptidao(campo);
-		
-	}
-	
-	
-	
-
-	
-	static int geraRand(int maximo) {
-
-		Random randomico = new Random();
-		
-		int rand = randomico.nextInt(maximo);
-		
-		return rand;
 	}
 
 	static void LOG(String s){
