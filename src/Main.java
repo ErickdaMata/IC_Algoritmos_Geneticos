@@ -1,13 +1,14 @@
-import java.util.Random;
 
 public class Main {
 	
 	final static int TAMANHO_CAMPO = 10;
 	final static int OBSTACULOS = 10;
 	
-	final static int TAMANHO_POPULACAO = 10;
+	final static int TAMANHO_POPULACAO = 40;
 	final static int PONTOS = 3;
 	final static int MULTA = TAMANHO_CAMPO * TAMANHO_CAMPO;
+	
+	static int GERACOES = 20;
 	
 	public static void main(String[] args) 
 	{
@@ -16,19 +17,19 @@ public class Main {
 		
 		campo.desenharCampo();
 		
-		Populacao populacao = new Populacao(TAMANHO_POPULACAO, TAMANHO_CAMPO, PONTOS, campo);
+		Populacao populacao = new Populacao(TAMANHO_POPULACAO, PONTOS, campo);
 		
-		populacao.avaliarAptidoes();
+		int geracao = 0;
 		
-		populacao.reproducao();
+		while(geracao < GERACOES) {
+			//LOG("Geracao>" + geracao + " - GERACOES>" + GERACOES);
+			populacao.novaGeracao();
+			geracao++;
+		}
 		
-		//Individuo individuo = new Individuo(TAMANHO, PONTOS);
 		
-		//individuo.gerarCromossomo(TAMANHO, PONTOS);
-		//int heranca[] = {3,7,6,0,6,0,0,1,1,0};
-		//Individuo individuo = new Individuo(heranca);
-		
-		//individuo.calcularAptidao(campo);
+		populacao.melhorIndividuo().exibirCromossomos();
+		LOG("Melhor Aptidão: " + populacao.melhorIndividuo().getAptidao());
 		
 	}
 

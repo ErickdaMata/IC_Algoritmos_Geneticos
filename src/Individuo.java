@@ -6,8 +6,9 @@ public class Individuo {
 	private int cromosso[];
 	private int PONTOS;
 	
+	
 	//Gera um individuo aleatorio
-	public Individuo(int TAMANHO, int PONTOS) {
+	public Individuo(int TAMANHO_CAMPO, int PONTOS) {
 		
 		//Cada individo terá um caminho em seu cromossomo:
 		//C = |P1i|P1j|P2i|P2j|P3i|P3j|d0|d1|d2|d3|
@@ -17,7 +18,7 @@ public class Individuo {
 		
 		cromosso = new int[tamanhoCromossomo];
 		
-		gerarCromossomo(TAMANHO, PONTOS);
+		gerarCromossomo(TAMANHO_CAMPO, PONTOS);
 		
 	}
 	
@@ -25,6 +26,10 @@ public class Individuo {
 	public Individuo(int[] heranca, int PONTOS) {
 		this.PONTOS = PONTOS;
 		setCromosso(heranca);
+	}
+	
+	public int getPONTOS() {
+		return PONTOS;
 	}
 	
 	public int getAptidao() {
@@ -47,12 +52,12 @@ public class Individuo {
 		this.cromosso = cromosso;
 	}
 	
-	public void gerarCromossomo(int TAMANHO, int PONTOS) {
+	public void gerarCromossomo(int TAMANHO_CAMPO, int PONTOS) {
 		int i;
 		
 		//Gera os pontos de passagem
 		for(i =0; i < (cromosso.length-(PONTOS+1)); i++) {
-			cromosso[i] = geraRand(TAMANHO);
+			cromosso[i] = geraRand(TAMANHO_CAMPO);
 		}
 		
 		//Gera as direções para chegar aos pontos
@@ -77,7 +82,7 @@ public class Individuo {
 			return;
 		
 		int p, d = 0, direcao;
-		int pesoCaminho = 1;
+		int pesoCaminho = 2;
 		int [] caminho = getCromosso();
 		
 		//Sempre inicia da entrada
@@ -117,20 +122,13 @@ public class Individuo {
 		//soma a apitidão do individuo
 		somaAptidao(pesoCaminho);
 		
-		exibirCromossomos();
-		LOG("Apitidão: " +getAptidao());
+		//exibirCromossomos();
+		//LOG("Apitidão: " +getAptidao());
 	}
 	
 
 	private int pontuaDistancia(Campo campo, int[] origem, int[] destino, int direcao) {
 		
-		//origem[0] = 3;
-		//origem[1] = 7;
-		
-		//destino[0] = 6;
-		//destino[1] = 6;
-		
-		//direcao = 0;
 		
 		int pontos = 0;
 		int passo;
