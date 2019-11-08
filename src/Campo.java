@@ -26,6 +26,14 @@ public class Campo {
 		
 	}
 	
+	public int[] getEntrada() {
+		return entrada;
+	}
+	
+	public int[] getSaida() {
+		return saida;
+	}
+	
 	public int getTAMANHO() {
 		return TAMANHO;
 	}
@@ -54,11 +62,11 @@ public class Campo {
 		
 		entrada = new int[2];
 		
-		entrada[0] = geraRand(TAMANHO);
-		entrada[1] = geraRand(TAMANHO);
+		//entrada[0] = geraRand(TAMANHO);
+		//entrada[1] = geraRand(TAMANHO);
 		
-		//entrada[0] = 0;
-		//entrada[1] = 7;
+		entrada[0] = 1;
+		entrada[1] = 1;
 		
 		campo[entrada[0]][entrada[1]] = 1;
 	}
@@ -67,32 +75,30 @@ public class Campo {
 		
 		saida = new int[2];
 		
-		saida[0] = geraRand(TAMANHO);
-		saida[1] = geraRand(TAMANHO);
-		//int[] saida   = {6,0};
+		//saida[0] = geraRand(TAMANHO);
+		//saida[1] = geraRand(TAMANHO);
 		
-		//saida[0] = 6;
-		//saida[1] = 0;
+		saida[0] = 2;
+		saida[1] = 9;
 		
 		campo[saida[0]][saida[1]] = 0;
 	}
 	
 	private void colocarObstaculos(int OBSTACULOS) {
 		
+		
+		campo[1][6] = MULTA;
+		campo[5][9] = MULTA;
+		campo[6][4] = MULTA;
+		campo[6][5] = MULTA;
+		campo[6][8] = MULTA;
+		campo[7][5] = MULTA;
+		campo[8][1] = MULTA;
+		campo[8][5] = MULTA;
+		campo[9][4] = MULTA;
+		
+		
 		/**
-		campo[0][2] = MULTA;
-		campo[0][6] = MULTA;
-		campo[3][1] = MULTA;
-		campo[4][5] = MULTA;
-		campo[4][8] = MULTA;
-		campo[4][9] = MULTA;
-		campo[7][1] = MULTA;
-		campo[7][4] = MULTA;
-		campo[9][1] = MULTA;
-		campo[9][8] = MULTA;
-		*/
-		
-		
 		int rndI, rndJ;
 		
 		//Coloca os obstáculos
@@ -106,7 +112,7 @@ public class Campo {
 				i++;
 			}	
 		}
-		
+		*/
 	}
 	
 	public void desenharCampo() {

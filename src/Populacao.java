@@ -3,12 +3,21 @@ import java.util.Random;
 
 public class Populacao extends ArrayList<Individuo>{
 	
+	private boolean LOG = true;
+	
+	private int GERACAO = 0;
 	private int TAMANHO_POPULACAO;
+	private int MELHOR_INDIVIDUO;
 	private int PONTOS;
+	
 	private double TAXA_MUTACAO = 0.01;
 	private double TAXA_REPRODUCAO = 0.9;
+	
+	
 	private Campo campo;
 	private ArrayList <Individuo> novaGeracao = new ArrayList<Individuo>();
+	
+	
 	
 	public Populacao(int tamanhoPopulacao, int PONTOS, Campo campo) {
 		// Cria uma população de N individuos, de maneira aleatória
@@ -64,42 +73,71 @@ public class Populacao extends ArrayList<Individuo>{
 	}
 	
 	public void avaliarAptidoes() {
+		LOG("AVALIANDO APTIDÕES");
 		for (int i = 0; i < TAMANHO_POPULACAO ; i++) {
+			if(LOG) {
+				System.out.print("["+i+"]>");
+				this.get(i).exibirCromossomos();
+			}
+			
 			this.get(i).calcularAptidao(campo);
+			
+			LOG("Aptidao: "+this.get(i).getAptidao());
 		}
 		elitismo();
 	}
 	
 	private void elitismo() {
 		
+		//Busca o melhor individuo
+		MELHOR_INDIVIDUO = this.melhorAptidao();
 		//Adiciona o melhor individuo a nova população
-		novaGeracao.add(this.get(melhorAptidao()));
+		novaGeracao.add(this.get(MELHOR_INDIVIDUO));
+		LOG("ELITISMO: Melhor Individuo:");
+		novaGeracao.get(0).exibirCromossomos();
 	}
 
 	private int melhorAptidao() {
 		// TODO Auto-generated method stub
 		int menor = Integer.MAX_VALUE, melhor = 0;
 		for(int i = 0; i < TAMANHO_POPULACAO; i++) {
+			if(LOG)
+				System.out.print("["+i+"]>");
+			if(LOG)
+				this.get(i).exibirCromossomos();
+			LOG("A:" + this.get(i).getAptidao());
 			if(this.get(i).getAptidao() < menor) {
 				menor = this.get(i).getAptidao();
 				melhor = i;
 			}
 		}
+		LOG(" >>> Melhor : " + melhor);
 		return melhor;
 	}
 
 	public void selecaoReproducao() {
 		
-		int[] participantes = geraQuatroRand(TAMANHO_POPULACAO);
+		LOG("SELEÇÃO");
 		
+		int[] participantes = geraQuatroRand(TAMANHO_POPULACAO);
+		LOG("Torneio: ("+participantes[0]+"X"+participantes[1]+") ("+participantes[2]+"X"+participantes[3]+")");
 		Individuo primeiroGanhador = torneio(this.get(participantes[0]), this.get(participantes[1]));
 		Individuo segundoGanhador  = torneio(this.get(participantes[2]), this.get(participantes[3]));
 		
+		if(LOG) {
+			LOG("Primeiro ganhador");
+			primeiroGanhador.exibirCromossomos();
+			LOG("Segundo ganhador");
+			segundoGanhador.exibirCromossomos();
+		}
+		
 		//Verifica se os individuos irão reproduzir
 		if(geraTaxa() < TAXA_REPRODUCAO) {
+			LOG("HOUVE REPRODUÇÃO");
 			//Realiza a reprodução
 			reproducao(primeiroGanhador, segundoGanhador);
 		} else {
+			LOG("NÃO HOUVE REPRODUÇÃO");
 			//Ou repete os pais para próxima geração
 			novaGeracao.add(primeiroGanhador);
 			novaGeracao.add(segundoGanhador);
@@ -118,6 +156,8 @@ public class Populacao extends ArrayList<Individuo>{
 		int ponto1 = rand1 < rand2? rand1 : rand2;
 		int ponto2 = rand1 > rand2? rand1 : rand2;
 		
+		LOG("CROSSOVER - p[" + ponto1 + ","+ponto2+"]");
+		
 		crossover(primeiroGanhador.getCromosso(), segundoGanhador.getCromosso(), ponto1, ponto2);
 		
 	}
@@ -125,16 +165,29 @@ public class Populacao extends ArrayList<Individuo>{
 	private void crossover(int[] primeiroCromossoma, int[] segundoCromossoma, int ponto1, int ponto2) {
 		int aux;
 		for (int i = 0; i <= primeiroCromossoma.length; i++) {
-			if(i>=ponto1 && i<=ponto1) {
+			if(i>=ponto1 && i<=ponto2) {
 				aux = primeiroCromossoma[i];
 				primeiroCromossoma[i] = segundoCromossoma[i];
 				segundoCromossoma[i] = aux;
 			}
 		}
 		
+		Individuo primeiroFilho = new Individuo(mutacao(primeiroCromossoma), PONTOS);  
+		Individuo segundoFilho = new Individuo(mutacao(segundoCromossoma), PONTOS);
+		
+		primeiroFilho.calcularAptidao(this.campo);
+		segundoFilho.calcularAptidao(this.campo);
+		
+		if(LOG) {
+			LOG("Primeiro filho");
+			primeiroFilho.exibirCromossomos();
+			LOG("Segundo filho");
+			segundoFilho.exibirCromossomos();
+		}
+		
 		//Nova geração recebe os filhos
-		novaGeracao.add(new Individuo(mutacao(primeiroCromossoma), PONTOS));
-		novaGeracao.add(new Individuo(mutacao(segundoCromossoma), PONTOS));
+		novaGeracao.add(primeiroFilho);
+		novaGeracao.add(segundoFilho);
 		
 	}
 	
@@ -153,9 +206,7 @@ public class Populacao extends ArrayList<Individuo>{
 	}
 
 	private Individuo torneio(Individuo primeiroIndividuo, Individuo segundoIndividuo) {
-		
 		return primeiroIndividuo.getAptidao() < segundoIndividuo.getAptidao() ? primeiroIndividuo : segundoIndividuo;
-		
 	}
 	
 	private double geraTaxa() {
@@ -212,33 +263,44 @@ public class Populacao extends ArrayList<Individuo>{
 		return sorteados;
 	}
 
-	private void exibirCromossomos(int[] cromossomo) {
-		System.out.print("Cromossomo> |");
-		for(int i =0; i < cromossomo.length; i++) {
-			System.out.print(cromossomo[i] + "|");
-		}
-		System.out.println("");
-	}
 
 	public void novaGeracao() {
 		// Metodo publico que realiza todos os procedimentos necessário
 		// para seleção e reprodução dos individuos da população, resultando
 		// em uma nova geração.
-		
+
 		this.avaliarAptidoes();
+
 		while(novaGeracao.size() < TAMANHO_POPULACAO){
 			this.selecaoReproducao();	
 		};
+
+		substituirIndividuos(novaGeracao);
 		
-		this.clear();
-		
-		this.addAll(novaGeracao);
-		
-		
+		//Busca o melhor individuo
+		MELHOR_INDIVIDUO = this.melhorAptidao();
 	}
 	
-	public Individuo melhorIndividuo() {
-		return this.get(melhorAptidao());
+	private void substituirIndividuos(ArrayList<Individuo> novaGeracao) {
+		// TODO Auto-generated method stub
+		this.clear();
+
+		for(int i = 0; i < TAMANHO_POPULACAO; i++)
+			this.add(new Individuo(novaGeracao.get(i).getCromosso(),PONTOS,novaGeracao.get(i).getAptidao()));
+		
+		novaGeracao.clear();
+		
+		LOG("GERAÇÃO: " + (++GERACAO));
 	}
+
+	public Individuo melhorIndividuo() {
+		return this.get(MELHOR_INDIVIDUO);
+	}
+	
+	private void LOG(String s){
+		if (LOG)
+			System.out.println(s);
+	}
+	
 }
 

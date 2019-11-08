@@ -6,7 +6,6 @@ public class Individuo {
 	private int cromosso[];
 	private int PONTOS;
 	
-	
 	//Gera um individuo aleatorio
 	public Individuo(int TAMANHO_CAMPO, int PONTOS) {
 		
@@ -25,6 +24,13 @@ public class Individuo {
 	//Gera um individuo que herdou cromossomos
 	public Individuo(int[] heranca, int PONTOS) {
 		this.PONTOS = PONTOS;
+		setCromosso(heranca);
+	}
+	
+	//Gera um individuo que herdou cromossomos
+	public Individuo(int[] heranca, int PONTOS, int aptidao) {
+		this.PONTOS = PONTOS;
+		this.aptidao = aptidao;
 		setCromosso(heranca);
 	}
 	
@@ -76,18 +82,23 @@ public class Individuo {
 	}
 	
 	public void calcularAptidao(Campo campo) {
-
-		//Caso a aptidão já tenha sido calculada
-		if(aptidao > 0)
-			return;
 		
-		int p, d = 0, direcao;
-		int pesoCaminho = 2;
+		LOG("CALCULO DE APTIDAO - INICIO:" + this.getAptidao());
+		LOG("Entrada: (" + campo.entrada[0] +","+campo.entrada[1]+")");
+		//Caso a aptidão já tenha sido calculada
+		//if(aptidao > 0)
+		//	return;
+		
+		int p = 0, d = 0, direcao = 0;
+		int pesoCaminho = 0;
 		int [] caminho = getCromosso();
 		
 		//Sempre inicia da entrada
-		int [] origem = campo.entrada;
+		int [] origem = new int[2];
 		int [] destino = new int[2];
+		
+		origem[0] = campo.entrada[0];
+		origem[1] = campo.entrada[1];
 		
 		d = (PONTOS*2);
 		
@@ -97,14 +108,16 @@ public class Individuo {
 			//Obtem o destino
 			destino[0] = caminho[p];
 			destino[1] = caminho[++p];
-
+			LOG(" - Origem : ["+origem[0]+"]["+origem[1]+"]");
+			LOG(" - Destino: ["+destino[0]+"]["+destino[1]+"]");
 			direcao = caminho[d];
 			
 			//calcula o peso do caminho
 			pesoCaminho = pontuaDistancia(campo, origem, destino, direcao);
-			
+			LOG(">>Peso caminho : "+pesoCaminho);
 			//soma a apitidão do individuo
 			somaAptidao(pesoCaminho);
+			LOG("Aptidao presente:" + this.getAptidao());
 			
 			//Nova origem passa ser o destino anterior, em valores para evitar ponteiro
 			origem[0] = destino[0];
@@ -113,22 +126,28 @@ public class Individuo {
 			d++;
 		}
 		
-		destino = campo.saida;
+		destino[0] = campo.saida[0];
+		destino[1] = campo.saida[1];
 		direcao = caminho[d];
-
+		
+		LOG(" - Origem : ["+origem[0]+"]["+origem[1]+"]");
+		LOG(" - Destino: ["+destino[0]+"]["+destino[1]+"]");
+		
 		//calcula o peso do caminho
 		pesoCaminho = pontuaDistancia(campo, origem, destino, direcao);
-		
+		LOG(">>Peso caminho : "+pesoCaminho);
 		//soma a apitidão do individuo
-		somaAptidao(pesoCaminho);
+		somaAptidao(pesoCaminho+1);
 		
-		//exibirCromossomos();
-		//LOG("Apitidão: " +getAptidao());
+		exibirCromossomos();
+		LOG("Apitidão FINAL: " +getAptidao());
+		
 	}
 	
 
 	private int pontuaDistancia(Campo campo, int[] origem, int[] destino, int direcao) {
 		
+		LOG(" Pontua de ["+origem[0]+"]["+origem[1]+"] - Destino: ["+destino[0]+"]["+destino[1]+"]");
 		
 		int pontos = 0;
 		int passo;
